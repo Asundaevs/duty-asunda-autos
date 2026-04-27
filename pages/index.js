@@ -2,35 +2,32 @@ import { useState } from 'react';
 import Head from 'next/head';
 
 export default function DutyCalculator() {
+  const [make, setMake] = useState('Toyota');
+  const [model, setModel] = useState('Harrier');
   const [year, setYear] = useState(2018);
   const [cc, setCc] = useState(1800);
   const [crsp, setCrsp] = useState(1500000);
   const [result, setResult] = useState(null);
 
-  // KRA 2026 Calculation - FIXED & VERIFIED
+  // KRA 2026 Calculation - VERIFIED CORRECT FORMULA
   const calculateDuty = () => {
     const currentYear = 2026;
     const vehicleAge = currentYear - parseInt(year);
-    const depreciationRate = Math.min(vehicleAge * 0.10, 0.70); // Cap 70%
+    const depreciationRate = Math.min(vehicleAge * 0.10, 0.70);
     const depreciatedValue = parseFloat(crsp) * (1 - depreciationRate);
     
-    // 1. Import Duty 25% of Depreciated Value
     const importDuty = depreciatedValue * 0.25;
     
-    // 2. Excise Duty - CORRECT BASE: Depreciated + Import Duty ONLY
     const exciseBase = depreciatedValue + importDuty;
-    const exciseRate = parseInt(cc) <= 1500 ? 0.20 : 0.25; // 20% if ≤1500cc, else 25%
+    const exciseRate = parseInt(cc) <= 1500 ? 0.20 : 0.25;
     const exciseDuty = exciseBase * exciseRate;
     
-    // 3. VAT 16% - Base: Depreciated + Import + Excise
     const vatBase = depreciatedValue + importDuty + exciseDuty;
     const vat = vatBase * 0.16;
     
-    // 4. IDF 2.25% + RDL 2% - Base: Depreciated Value ONLY
     const idf = depreciatedValue * 0.0225;
     const rdl = depreciatedValue * 0.02;
     
-    // Total Duty
     const totalDuty = importDuty + exciseDuty + vat + idf + rdl;
     const totalCost = parseFloat(crsp) + totalDuty;
     
@@ -53,14 +50,80 @@ export default function DutyCalculator() {
     return 'KES ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
 
+  const fullVehicleName = `${make} ${model}`;
+  
   const whatsappMessage = result 
-    ? `Hi Asunda Autos, I checked duty for ${year} ${cc}cc car CRSP ${formatKES(crsp)}. Total duty: ${formatKES(result.totalDuty)}. Need import help.`
+    ? `Hi Asunda Autos, I checked KRA duty for ${year} ${fullVehicleName} ${cc}cc. CRSP: ${formatKES(crsp)}. Total duty: ${formatKES(result.totalDuty)}. Need import help from Mombasa.`
     : `Hi Asunda Autos, need help with car import duty.`;
+
+  // AEO + GEO Schema for Google
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "KRA Import Duty Calculator 2026 - Asunda Autos",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "KES"
+    },
+    "description": "Free KRA car import duty calculator for Kenya. Calculate Import Duty, Excise, VAT for Toyota, Nissan, Subaru, Mazda. Updated 2026 KRA rates. Serves Nairobi, Mombasa, Nakuru, Kisumu.",
+    "url": "https://duty.asunda.autos",
+    "provider": {
+      "@type": "LocalBusiness",
+      "name": "Asunda Autos",
+      "telephone": "+254115513320",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Nakuru",
+        "addressRegion": "Rift Valley",
+        "addressCountry": "KE"
+      },
+      "areaServed": [
+        {"@type": "City", "name": "Nairobi"},
+        {"@type": "City", "name": "Mombasa"},
+        {"@type": "City", "name": "Nakuru"},
+        {"@type": "City", "name": "Kisumu"},
+        {"@type": "City", "name": "Eldoret"}
+      ]
+    }
+  };
 
   return (
     <>
       <Head>
-        <title>KRA Import Duty Calculator 2026 | Asunda Autos Kenya</title>
-        <meta name="description" content="Free KRA car import duty calculator Kenya 2026. Check Import Duty, Excise, VAT, IDF, RDL for Toyota, Nissan, Subaru. Accurate 70% depreciation rule." />
-        <meta name="keywords" content="KRA duty calculator, car import Kenya, Mombasa duty, Toyota Harrier duty, KRA 2026 rates" />
-        <meta property="og:title" content="Free KRA Duty Calculator 2026
+        <title>KRA Duty Calculator 2026 Kenya | {fullVehicleName} Import Duty | Asunda Autos</title>
+        <meta name="description" content={`Free KRA import duty calculator for ${fullVehicleName} in Kenya. Check Import Duty, Excise 25%, VAT 16% for cars from Mombasa. 2026 KRA rates. Nakuru, Nairobi agents.`} />
+        <meta name="keywords" content={`KRA duty calculator, ${make} ${model} import duty Kenya, car import Mombasa, ${make} Kenya, ${model} duty, KRA 2026, Nakuru car import, Asunda Autos`} />
+        <meta property="og:title" content={`KRA Duty Calculator - ${fullVehicleName} 2026`} />
+        <meta property="og:description" content={`Calculate exact KRA import duty for ${fullVehicleName} in 5 seconds. Free 2026 calculator by Asunda Autos Kenya.`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://duty.asunda.autos" />
+        <meta property="og:locale" content="en_KE" />
+        <link rel="canonical" href="https://duty.asunda.autos" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="geo.region" content="KE-30" />
+        <meta name="geo.placename" content="Nakuru" />
+        <link rel="icon" href="/favicon.ico" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
+      </Head>
+
+      <main style={{fontFamily: 'system-ui, -apple-system, sans-serif', maxWidth: '600px', margin: '0 auto', padding: '20px', backgroundColor: '#f8fafc', minHeight: '100vh'}}>
+        
+        <div style={{textAlign: 'center', marginBottom: '30px'}}>
+          <h1 style={{fontSize: '28px', fontWeight: '700', color: '#0f172a', margin: '0 0 8px 0'}}>
+            KRA Import Duty Calculator 2026
+          </h1>
+          <p style={{fontSize: '16px', color: '#475569', margin: 0}}>
+            Check exact duty for cars imported to Kenya 🇰🇪
+          </p>
+          <p style={{fontSize: '13px', color: '#64748b', margin: '8px 0 0 0'}}>
+            Serving: Nairobi | Mombasa | Nakuru | Kisumu | Eldoret
+          </p>
+        </div>
+
+        <div style={{backgroundColor: 'white', borderRadius: '12px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', marginBottom: '20px'}}>
+          
+          <div style={{marginBottom: '20px'}}>
+            <label style={{display: 'block', fontSize: '14px', fontWeight:
