@@ -87,19 +87,4 @@ export default function DutyCalculator() {
     <>
       <Head>
         <title>KRA Duty Calculator 2026 Kenya | {fullVehicleName} Import Duty | Asunda Autos</title>
-        <meta name="description" content={`Free KRA import duty calculator for ${fullVehicleName} in Kenya. Check Import Duty, Excise 25%, VAT 16% for cars from Mombasa. 2026 KRA rates. Nakuru, Nairobi agents.`} />
-        <meta name="keywords" content={`KRA duty calculator, ${make} ${model} import duty Kenya, car import Mombasa, ${make} Kenya, ${model} duty, KRA 2026, Nakuru car import, Asunda Autos`} />
-        <meta property="og:title" content={`KRA Duty Calculator - ${fullVehicleName} 2026`} />
-        <meta property="og:description" content={`Calculate exact KRA import duty for ${fullVehicleName} in 5 seconds. Free 2026 calculator by Asunda Autos Kenya.`} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://duty.asunda.autos" />
-        <meta property="og:locale" content="en_KE" />
-        <link rel="canonical" href="https://duty.asunda.autos" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="geo.region" content="KE-30" />
-        <meta name="geo.placename" content="Nakuru" />
-        <link rel="icon" href="/favicon.ico" />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
-      </Head>
-
-      <main style={{fontFamily: 'system-ui, -apple-system, sans-serif', maxWidth: '600px', margin: '0 auto', padding: '20px', backgroundColor: '#f8
+        <meta name="description" content={`Free KRA import duty calculator for ${fullVehicleName} in Kenya. Check Import Duty, Excise 25%, VAT 16% for cars from Mombasa. 202
