@@ -9,28 +9,22 @@ export default function DutyCalculator() {
   const [crsp, setCrsp] = useState(1500000);
   const [result, setResult] = useState(null);
 
-  // KRA 2026 Calculation - VERIFIED CORRECT FORMULA
   const calculateDuty = () => {
     const currentYear = 2026;
     const vehicleAge = currentYear - parseInt(year);
     const depreciationRate = Math.min(vehicleAge * 0.10, 0.70);
     const depreciatedValue = parseFloat(crsp) * (1 - depreciationRate);
-    
     const importDuty = depreciatedValue * 0.25;
-    
     const exciseBase = depreciatedValue + importDuty;
     const exciseRate = parseInt(cc) <= 1500 ? 0.20 : 0.25;
     const exciseDuty = exciseBase * exciseRate;
-    
     const vatBase = depreciatedValue + importDuty + exciseDuty;
     const vat = vatBase * 0.16;
-    
     const idf = depreciatedValue * 0.0225;
     const rdl = depreciatedValue * 0.02;
-    
     const totalDuty = importDuty + exciseDuty + vat + idf + rdl;
     const totalCost = parseFloat(crsp) + totalDuty;
-    
+
     setResult({
       vehicleAge,
       depreciationPercent: (depreciationRate * 100).toFixed(0),
@@ -51,12 +45,11 @@ export default function DutyCalculator() {
   };
 
   const fullVehicleName = `${make} ${model}`;
-  
-  const whatsappMessage = result 
+
+  const whatsappMessage = result
     ? `Hi Asunda Autos, I checked KRA duty for ${year} ${fullVehicleName} ${cc}cc. CRSP: ${formatKES(crsp)}. Total duty: ${formatKES(result.totalDuty)}. Need import help from Mombasa.`
     : `Hi Asunda Autos, need help with car import duty.`;
 
-  // AEO + GEO Schema for Google
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -109,21 +102,4 @@ export default function DutyCalculator() {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
       </Head>
 
-      <main style={{fontFamily: 'system-ui, -apple-system, sans-serif', maxWidth: '600px', margin: '0 auto', padding: '20px', backgroundColor: '#f8fafc', minHeight: '100vh'}}>
-        
-        <div style={{textAlign: 'center', marginBottom: '30px'}}>
-          <h1 style={{fontSize: '28px', fontWeight: '700', color: '#0f172a', margin: '0 0 8px 0'}}>
-            KRA Import Duty Calculator 2026
-          </h1>
-          <p style={{fontSize: '16px', color: '#475569', margin: 0}}>
-            Check exact duty for cars imported to Kenya 🇰🇪
-          </p>
-          <p style={{fontSize: '13px', color: '#64748b', margin: '8px 0 0 0'}}>
-            Serving: Nairobi | Mombasa | Nakuru | Kisumu | Eldoret
-          </p>
-        </div>
-
-        <div style={{backgroundColor: 'white', borderRadius: '12px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', marginBottom: '20px'}}>
-          
-          <div style={{marginBottom: '20px'}}>
-            <label style={{display: 'block', fontSize: '14px', fontWeight:
+      <main style={{fontFamily: 'system-ui, -apple-system, sans-serif', maxWidth: '600px', margin: '0 auto', padding: '20px', backgroundColor: '#f8
